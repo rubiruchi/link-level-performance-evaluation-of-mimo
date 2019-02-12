@@ -1,6 +1,6 @@
 clear; close all;
 %% Initialisation
-snrDb = 0: 1: 20;
+snrDb = -10: 1: 20;
 snr = 10 .^ (snrDb / 10);
 nSnrs = length(snrDb);
 nTxs = 2;
@@ -41,4 +41,4 @@ grid on;
 legend('2-by-2 rank deficient', '2-by-2 full rank');
 xlabel('SNR per bit (dB)');
 ylabel('Channel capacity (bps/Hz)');
-title('Analytical capacity with CSIT for rank deficient and full rank channels');
+title('Analytical capacity with CSIT of rank deficient and full rank channels');
