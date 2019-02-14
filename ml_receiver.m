@@ -1,4 +1,4 @@
-function [bitQpsk, snrAvg] = ml_receiver(symbolRx, channel, powerNoise)
+function [bitRec, snrAvg] = ml_receiver(symbolRx, channel, powerNoise)
 % Function: 
 %   - maximum-likelihood receiver for spatial multiplexing transmission
 %
@@ -8,7 +8,7 @@ function [bitQpsk, snrAvg] = ml_receiver(symbolRx, channel, powerNoise)
 %   - powerNoise: noise power
 %
 % OutputArg(s):
-%   - bitQpsk: recovered bit stream
+%   - bitRec: recovered bit stream
 %   - snrAvg: average output SNR
 %
 % Comments:
@@ -24,7 +24,7 @@ function [bitQpsk, snrAvg] = ml_receiver(symbolRx, channel, powerNoise)
 %% Calculate average SNR
 nTxs = size(channel, 2);
 nBits = length(symbolRx) * nTxs * 2;
-bitQpsk = zeros(1, nBits);
+bitRec = zeros(1, nBits);
 % compute average received bit power
 powerBitAvg = norm(symbolRx) ^ 2 / nBits;
 % and average output SNR
@@ -46,9 +46,10 @@ for iGroup = 1: nGroups
     [~, index] = min(distance);
     symbolRx(:, iGroup) = symbolSet(:, index);
 end
+% reshape to stream
 symbolRx = reshape(symbolRx, 1, length(symbolRx) * nTxs);
 % demap to bits
-bitQpsk(1: 2: end - 1) = 1 / 2 * (1 - sign(real(symbolRx)));
-bitQpsk(2: 2: end) = 1 / 2 * (1 - sign(imag(symbolRx)));
+bitRec(1: 2: end - 1) = 1 / 2 * (1 - sign(real(symbolRx)));
+bitRec(2: 2: end) = 1 / 2 * (1 - sign(imag(symbolRx)));
 end
 

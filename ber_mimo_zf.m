@@ -15,7 +15,7 @@ powerBit = powerSymbol / 2;
 anaBer = zeros(nSnrs, 1);
 numBer = zeros(nSnrs, 1);
 snrAvg = zeros(nSnrs, 1);
-%% Bit generation, symbol mapping, channel generation, SM transmittion, ML estimation, and BER calculation
+%% Bit generation, symbol mapping, channel generation, SM transmittion, ZF receiver, and BER calculation
 % generate raw bit stream
 bitStream = round(rand(1, nBits));
 % map bits to symbols
@@ -37,7 +37,7 @@ for iSnr = 1: nSnrs
         % received signal
         smSymbolRx = channel * smSymbolTx + noise;
         % decode by maximum-likelihood estimation
-        [bitRec, snrChannel(iChannel)] = ml_receiver(smSymbolRx, channel, powerNoise);
+        [bitRec, snrChannel(iChannel)] = zf_receiver(smSymbolRx, channel, powerNoise);
         % count errors
         errorCount = errorCount + sum(xor(bitStream, bitRec));
     end
@@ -46,7 +46,7 @@ for iSnr = 1: nSnrs
     numBer(iSnr) = errorCount / nChannels / nBits;
     % analytical BER (approximated)
     dMin = sqrt(2);
-    anaBer(iSnr) = (snr(iSnr) / 4 / nTxs) ^ (-nRxs) * (nTxs * dMin ^ 2) ^ (-nRxs);
+    anaBer(iSnr) = (snr(iSnr) / 4 / nTxs) ^ -(nRxs - nTxs + 1) * dMin ^ -(2 * (nRxs - nTxs + 1));
 end
 arrayGain = array_gain(snr, snrAvg');
 divGain = diversity_gain(snr, numBer');
@@ -58,7 +58,7 @@ hold on;
 semilogy(snrDb, numBer, 'r-.x');
 grid on;
 legend('Analytical', 'Numerical');
-title('BER vs SNR of spatial multiplexing with ML receiver and QPSK constellation over a 2-by-2 MIMO Rayleigh fading channel');
+title('BER vs SNR of spatial multiplexing with ZF receiver and QPSK constellation over a 2-by-2 MIMO Rayleigh fading channel');
 xlabel('SNR (dB)');
 ylabel('BER');
 % array and diversity gains
@@ -72,5 +72,5 @@ title('Array and diversity gains of spatial multiplexing transmission');
 xlabel('SNR (dB)');
 ylabel('Gain');
 % % save data
-% numBerMl = numBer;
-% save('ber_set.mat', 'numBerMl', '-append');
+% numBerZf = numBer;
+% save('ber_set.mat', 'numBerZf', '-append');
