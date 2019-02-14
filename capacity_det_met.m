@@ -33,6 +33,7 @@ for iSnr = 1: nSnrs
     capacityDet(iSnr) = sum(log2(1 + snr(iSnr) * powerDet(iSnr, :) .* lambdaDet));
     capacityMet(iSnr) = sum(log2(1 + snr(iSnr) * powerMet(iSnr, :) .* lambdaMet));
 end
+%% Result plot
 figure;
 plot(snrDb, capacityDet, 'r-.x');
 hold on;

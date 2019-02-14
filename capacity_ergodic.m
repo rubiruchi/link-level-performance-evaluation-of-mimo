@@ -13,6 +13,7 @@ nCases = length(nTxs);
 nChannels = 1e4;
 capacityCdit = zeros(nCases, nSnrs);
 capacityCsit = zeros(nCases, nSnrs);
+%% Channel generation, water-filling allocation and capacity calculation
 for iCase = 1: nCases
     for iSnr = 1: nSnrs
         powerCdit = zeros(nChannels, nStreams(iCase));
@@ -37,7 +38,18 @@ for iCase = 1: nCases
         capacityCsit(iCase, iSnr) = sum(mean(log2(1 + snr(iSnr) * powerCsit .* lambda)));
     end
 end
-figure;
+% SISO capacity
+capacitySiso = log2(1 + snr);
+% calculate the multiplexing gain for the 2-by-2, 2-by-4, 4-by-2 systems
+[mulGainCdit(1, :)] = multiplexing_gain(capacitySiso, capacityCdit(1, :));
+[mulGainCsit(1, :)] = multiplexing_gain(capacitySiso, capacityCsit(1, :));
+[mulGainCdit(2, :)] = multiplexing_gain(capacitySiso, capacityCdit(2, :));
+[mulGainCsit(2, :)] = multiplexing_gain(capacitySiso, capacityCsit(2, :));
+[mulGainCdit(3, :)] = multiplexing_gain(capacitySiso, capacityCdit(3, :));
+[mulGainCsit(3, :)] = multiplexing_gain(capacitySiso, capacityCsit(3, :));
+%% Result plot
+% ergodic capacity
+figure(1);
 plot(snrDb, capacityCdit(1, :), 'k--o');
 hold on;
 plot(snrDb, capacityCsit(1, :), 'k-o');
@@ -55,3 +67,21 @@ xlabel('SNR per bit (dB)');
 ylabel('Ergodic capacity (bps/Hz)');
 ylim([0 16]);
 title('Ergodic capacity of various MIMO (Rx-by-Tx) channels with CDIT and CSIT');
+% multiplexing gain
+figure(2);
+plot(snrDb, mulGainCdit(1, :), 'k--o');
+hold on;
+plot(snrDb, mulGainCsit(1, :), 'k-o');
+hold on;
+plot(snrDb, mulGainCdit(2, :), 'b--s');
+hold on;
+plot(snrDb, mulGainCsit(2, :), 'b-s');
+hold on;
+plot(snrDb, mulGainCdit(3, :), 'r--x');
+hold on;
+plot(snrDb, mulGainCsit(3, :), 'r-x');
+grid on;
+legend('2-by-2 (CDIT)', '2-by-2 (CSIT)', '2-by-4 (CDIT)', '2-by-4 (CSIT)', '4-by-2 (CDIT)', '4-by-2 (CSIT)', 'location', 'northwest');
+xlabel('SNR per bit (dB)');
+ylabel('Multiplexing gain');
+title('Multiplexing gain of various MIMO (Rx-by-Tx) channels with CDIT and CSIT');
