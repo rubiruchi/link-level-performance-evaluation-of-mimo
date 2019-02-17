@@ -15,7 +15,7 @@ powerBit = powerSymbol / 2;
 anaBer = zeros(nSnrs, 1);
 numBer = zeros(nSnrs, 1);
 snrAvg = zeros(nSnrs, 1);
-%% Bit generation, symbol mapping, channel generation, SM transmittion, ZF receiver, and BER calculation
+%% Bit generation, symbol mapping, channel generation, SM transmittion, unordered ZF SIC receiver, and BER calculation
 % generate raw bit stream
 bitStream = round(rand(1, nBits));
 % map bits to symbols
@@ -36,8 +36,8 @@ for iSnr = 1: nSnrs
         noise = sqrt(powerNoise / 2) * (randn(size(smSymbolTx)) + 1i * randn(size(smSymbolTx)));
         % received signal
         smSymbolRx = channel * smSymbolTx + noise;
-        % decode by zero-forcing receiver
-        [bitRec, snrChannel(iChannel)] = zf_receiver(smSymbolRx, channel, powerNoise);
+        % decode by unordered ZF SIC receiver
+        [bitRec, snrChannel(iChannel)] = unordered_sic_receiver(smSymbolRx, channel, powerNoise);
         % count errors
         errorCount = errorCount + sum(xor(bitStream, bitRec));
     end
@@ -58,7 +58,7 @@ hold on;
 semilogy(snrDb, numBer, 'r-.x');
 grid on;
 legend('Analytical', 'Numerical');
-title('BER vs SNR of spatial multiplexing with ZF receiver and QPSK constellation over a 2-by-2 MIMO Rayleigh fading channel');
+title('BER vs SNR of spatial multiplexing with unordered ZF SIC receiver and QPSK constellation over a 2-by-2 MIMO Rayleigh fading channel');
 xlabel('SNR (dB)');
 ylabel('BER');
 % array and diversity gains
@@ -72,5 +72,5 @@ title('Array and diversity gains of spatial multiplexing transmission');
 xlabel('SNR (dB)');
 ylabel('Gain');
 % % save data
-% numBerZf = numBer;
-% save('ber_set.mat', 'numBerZf', '-append');
+% numBerUnorderedSic = numBer;
+% save('ber_set.mat', 'numBerUnorderedZfSic', '-append');

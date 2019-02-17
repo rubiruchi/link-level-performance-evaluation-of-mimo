@@ -18,11 +18,12 @@ function [bitRec, snrAvg] = zf_receiver(symbolRx, channel, powerNoise)
 %   - the inversion step enhances the noise (especially at low SNR)
 %   - low complexity comes with the limitation of a diversity gain (nRxs - 
 %   nTxs + 1)
-%   - the system is undetermined if nRxs > nTxs.
+%   - the system is undetermined if nRxs > nTxs
 %
 % Author & Date: Yang (i@snowztail.com) - 14 Feb 19
 
 %% Calculate average SNR
+powerSymbol = 1;
 nTxs = size(channel, 2);
 nBits = length(symbolRx) * nTxs * 2;
 bitRec = zeros(1, nBits);
@@ -32,7 +33,7 @@ powerBitAvg = norm(symbolRx) ^ 2 / nBits;
 snrAvg = powerBitAvg / powerNoise;
 %% Decode by zero-forcing detector
 % zero-forcing filter
-zfFilter = sqrt(nTxs) * pinv(channel);
+zfFilter = sqrt(nTxs / powerSymbol) * pinv(channel);
 % filter output is the transmitted symbol vector plus enhanced noise
 symbolOut = zfFilter * symbolRx;
 % reshape to stream
