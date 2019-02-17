@@ -30,7 +30,8 @@ powerBitAvg = norm(symbolRx) ^ 2 / nBits;
 % and average output SNR
 snrAvg = powerBitAvg / powerNoise;
 %% Decode by maximul-likelihood detector
-symbolSet = [1 + 1i; 1 - 1i; -1 + 1i; -1 - 1i];
+% transmit symbol set
+symbolSet = sqrt(1 / 2) * [1 + 1i; 1 - 1i; -1 + 1i; -1 - 1i];
 % extend the set
 symbolSet = repmat(symbolSet, nTxs, 1);
 % obtain all possible groups for given number of transmitters
@@ -39,7 +40,7 @@ symbolSet = unique(nchoosek(symbolSet, nTxs), 'rows').';
 nGroups = length(symbolRx);
 for iGroup = 1: nGroups
     % calculate the shift in signal space group by group
-    shift = repmat(symbolRx(:, iGroup), 1, length(symbolSet)) - 1 / nTxs * channel * symbolSet;
+    shift = repmat(symbolRx(:, iGroup), 1, length(symbolSet)) - sqrt(1 / nTxs) * channel * symbolSet;
     % compute the Euclidean distance to the candidate groups 
     distance = vecnorm(shift);
     % find the closest group and regard as transimitted symbol
