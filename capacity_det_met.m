@@ -16,9 +16,9 @@ capacityMet = zeros(nSnrs, 1);
 % channel matrix decomposition
 [uDet, sigmaDet, vDet] = svd(channelDet);
 [uMet, sigmaMet, vMet] = svd(channelMet);
-% unify notation
-vDet = vDet';
-vMet = vMet';
+% % unify notation
+% vDet = vDet';
+% vMet = vMet';
 % diagonal entries are eigenvalues
 lambdaDet = diag(sigmaDet .^ 2)';
 lambdaMet = diag(sigmaMet .^ 2)';
@@ -39,7 +39,7 @@ plot(snrDb, capacityDet, 'r-.x');
 hold on;
 plot(snrDb, capacityMet, 'k-o');
 grid on;
-legend('2-by-2 rank deficient', '2-by-2 full rank');
+legend('2-by-2 rank deficient', '2-by-2 full rank', 'location', 'northwest');
 xlabel('SNR per bit (dB)');
 ylabel('Channel capacity (bps/Hz)');
 title('Analytical capacity with CSIT of rank deficient and full rank channels');

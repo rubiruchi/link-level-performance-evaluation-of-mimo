@@ -6,8 +6,8 @@ snr = 10 .^ (snrDb / 10);
 nSnrs = length(snrDb);
 nTxs = 2;
 nRxs = 2;
-nChannels = 1e2;
-nBits = 1e4;
+nChannels = 1e3;
+nBits = 1e6;
 nSymbols = nBits / 2;
 % assume unit symbol power
 powerSymbol = 1;
@@ -37,7 +37,7 @@ for iSnr = 1: nSnrs
         % received signal
         smSymbolRx = channel * smSymbolTx + noise;
         % decode by unordered ZF SIC receiver
-        [bitRec, snrChannel(iChannel)] = unordered_sic_receiver(smSymbolRx, channel, powerNoise);
+        [bitRec, snrChannel(iChannel)] = unordered_zf_sic_receiver(smSymbolRx, channel, powerNoise);
         % count errors
         errorCount = errorCount + sum(xor(bitStream, bitRec));
     end
@@ -68,9 +68,9 @@ hold on;
 plot(snrDb, divGain, 'r-.x');
 grid on;
 legend('Array gain', 'Diversity gain');
-title('Array and diversity gains of spatial multiplexing transmission');
+title('Array and diversity gains of spatial multiplexing transmission with SIC receiver');
 xlabel('SNR (dB)');
 ylabel('Gain');
-% % save data
-% numBerUnorderedSic = numBer;
-% save('ber_set.mat', 'numBerUnorderedZfSic', '-append');
+% save data
+numBerUnorderedZfSic = numBer;
+save('ber_set.mat', 'numBerUnorderedZfSic', '-append');

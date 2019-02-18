@@ -6,8 +6,8 @@ snr = 10 .^ (snrDb / 10);
 nSnrs = length(snrDb);
 nTxs = 2;
 nRxs = 2;
-nChannels = 1e2;
-nBits = 1e4;
+nChannels = 1e3;
+nBits = 1e6;
 nSymbols = nBits / 2;
 % assume unit symbol power
 powerSymbol = 1;
@@ -68,9 +68,9 @@ hold on;
 plot(snrDb, divGain, 'r-.x');
 grid on;
 legend('Array gain', 'Diversity gain');
-title('Array and diversity gains of spatial multiplexing transmission');
+title('Array and diversity gains of spatial multiplexing transmission with ZF receiver');
 xlabel('SNR (dB)');
 ylabel('Gain');
-% % save data
-% numBerZf = numBer;
-% save('ber_set.mat', 'numBerZf', '-append');
+% save data
+numBerZf = numBer;
+save('ber_set.mat', 'numBerZf', '-append');

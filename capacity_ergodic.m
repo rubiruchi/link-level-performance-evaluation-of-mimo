@@ -81,7 +81,7 @@ plot(snrDb, mulGainCdit(3, :), 'r--x');
 hold on;
 plot(snrDb, mulGainCsit(3, :), 'r-x');
 grid on;
-legend('2-by-2 (CDIT)', '2-by-2 (CSIT)', '2-by-4 (CDIT)', '2-by-4 (CSIT)', '4-by-2 (CDIT)', '4-by-2 (CSIT)', 'location', 'northwest');
+legend('2-by-2 (CDIT)', '2-by-2 (CSIT)', '2-by-4 (CDIT)', '2-by-4 (CSIT)', '4-by-2 (CDIT)', '4-by-2 (CSIT)', 'location', 'northeast');
 xlabel('SNR per bit (dB)');
 ylabel('Multiplexing gain');
 title('Multiplexing gain of various MIMO (Rx-by-Tx) channels with CDIT and CSIT');
