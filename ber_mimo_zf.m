@@ -29,11 +29,11 @@ for iSnr = 1: nSnrs
     snrChannel = zeros(nChannels, 1);
     for iChannel = 1: nChannels
         % i.i.d. CSCG channel
-        channel = sqrt(1 / 2) * (randn(nTxs, nRxs) + 1i * randn(nTxs, nRxs));
+        channel = sqrt(1 / 2) * (randn(nRxs, nTxs) + 1i * randn(nRxs, nTxs));
         % spatial multiplexing transmission
         [smSymbolTx] = spatial_multiplexing(symbol, channel);
-        % generate CSCG noise for each receiver
-        noise = sqrt(powerNoise / 2) * (randn(size(smSymbolTx)) + 1i * randn(size(smSymbolTx)));
+        % generate CSCG noise for each receiver (coef to ensure SNR)
+        noise = sqrt(nTxs) * sqrt(powerNoise / 2) * (randn(size(smSymbolTx)) + 1i * randn(size(smSymbolTx)));
         % received signal
         smSymbolRx = channel * smSymbolTx + noise;
         % decode by zero-forcing receiver
@@ -72,5 +72,5 @@ title('Array and diversity gains of spatial multiplexing transmission with ZF re
 xlabel('SNR (dB)');
 ylabel('Gain');
 % save data
-numBerZf = numBer;
-save('ber_set.mat', 'numBerZf', '-append');
+% numBerZf = numBer;
+% save('ber_set.mat', 'numBerZf');

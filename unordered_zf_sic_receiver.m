@@ -37,7 +37,7 @@ for iTx = 1: nTxs
     % extract a stream from the received signal
     symbolOut(iTx, :) = zfFilter(iTx, :) * symbolRx;
     % slice the stream to obtain the estimated transmitted symbol
-    symbolOut(iTx, :) = sign(real(symbolOut(iTx, :))) + 1i * sign(imag(symbolOut(iTx, :)));
+    symbolOut(iTx, :) = 1 / sqrt(2) * (sign(real(symbolOut(iTx, :))) + 1i * sign(imag(symbolOut(iTx, :))));
     % reduce the influence of the decoded stream
     symbolRx = symbolRx - sqrt(powerSymbol / nTxs) * channel(:, iTx) * symbolOut(iTx, :);
 end
