@@ -73,4 +73,4 @@ xlabel('SNR (dB)');
 ylabel('Gain');
 % save data
 % numBerMl = numBer;
-% save('ber_set.mat', 'numBerMl');
+% save('ber_set.mat', 'numBerMl', '-append');

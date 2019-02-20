@@ -33,7 +33,8 @@ snrAvg = powerBitAvg / powerNoise;
 symbolOut = zeros(size(symbolRx));
 % zero-forcing filter
 zfFilter = sqrt(nTxs) * pinv(channel);
-for iTx = 1: nTxs
+% ZF decoding for all but the last
+for iTx = 1: nTxs - 1
     % extract a stream from the received signal
     symbolOut(iTx, :) = zfFilter(iTx, :) * symbolRx;
     % slice the stream to obtain the estimated transmitted symbol
@@ -41,6 +42,9 @@ for iTx = 1: nTxs
     % reduce the influence of the decoded stream
     symbolRx = symbolRx - sqrt(powerSymbol / nTxs) * channel(:, iTx) * symbolOut(iTx, :);
 end
+% MRC for the last
+symbolOut(end, :) = mrc(symbolRx, channel(:, end));
+symbolOut(end, :) = 1 / sqrt(2) * (sign(real(symbolOut(end, :))) + 1i * sign(imag(symbolOut(end, :))));
 % reshape to stream
 symbolOut = reshape(symbolOut, 1, length(symbolOut) * nTxs);
 % demap to bits
