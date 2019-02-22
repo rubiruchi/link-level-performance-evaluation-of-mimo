@@ -32,8 +32,8 @@ for iSnr = 1: nSnrs
         channel = sqrt(1 / 2) * (randn(nRxs, nTxs) + 1i * randn(nRxs, nTxs));
         % spatial multiplexing transmission
         [smSymbolTx] = spatial_multiplexing(symbol, channel);
-        % generate CSCG noise for each receiver (coef to ensure SNR)
-        noise = sqrt(nTxs) * sqrt(powerNoise / 2) * (randn(size(smSymbolTx)) + 1i * randn(size(smSymbolTx)));
+        % generate CSCG noise for each receiver
+        noise = sqrt(powerNoise / 2) * (randn(size(smSymbolTx)) + 1i * randn(size(smSymbolTx)));
         % received signal
         smSymbolRx = channel * smSymbolTx + noise;
         % decode by unordered ZF SIC receiver
